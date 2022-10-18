@@ -2,6 +2,7 @@
 
 import 'package:citizen_star/constant/sizes.dart';
 import 'package:citizen_star/screens/dashboard.dart';
+import 'package:citizen_star/widget/forgetpasswordsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -74,7 +75,9 @@ class LoginScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              ForgetPasswordScreen.buildShowModalBottomSheet(context);
+                            },
                             child: const Text("Forget Password"),
                           ),
                         ),
@@ -107,4 +110,7 @@ class LoginScreen extends StatelessWidget {
     );
   
   }
+
+ 
 }
+
