@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:citizen_star/constant/sizes.dart';
+import 'package:citizen_star/screens/otp_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ForgetPasswordMail extends StatelessWidget{
   const ForgetPasswordMail({Key? key}) : super(key: key);
@@ -67,7 +69,9 @@ class ForgetPasswordMail extends StatelessWidget{
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                    onPressed: () {}, 
+                    onPressed: () {
+                      Get.to(() => const OTPScreen());
+                    }, 
                     style: OutlinedButton.styleFrom(
                       elevation: 0,
                       shape: RoundedRectangleBorder(
