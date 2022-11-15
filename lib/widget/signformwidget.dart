@@ -1,13 +1,103 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables, empty_catches, unused_local_variable, avoid_print
 
+import 'dart:convert';
+
+import 'package:citizen_star/api_connection/api_conn.dart';
 import 'package:citizen_star/constant/sizes.dart';
+import 'package:citizen_star/constant/user.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 
-class SignupFormWidget extends StatelessWidget {
+class SignupFormWidget extends StatefulWidget {
   const SignupFormWidget({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<SignupFormWidget> createState() => _SignupFormWidgetState();
+}
+
+class _SignupFormWidgetState extends State<SignupFormWidget> {
+
+var formKey = GlobalKey<FormState>();
+TextEditingController usernameController = TextEditingController();
+TextEditingController firstnameController = TextEditingController();
+TextEditingController lastnameController = TextEditingController();
+TextEditingController icController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
+validateUserEmail() async
+{
+  try{
+      var res = await http.post(
+      Uri.parse(API.validateEmail),
+      body: {
+        'email': emailController.text.trim(),
+
+      },
+    );
+
+    if(res.statusCode == 200) //connection with api to server - success
+    {
+      var resBody = jsonDecode(res.body);
+
+      if(resBody['emailFound'] == true){
+         Fluttertoast.showToast(msg: "Email is already taken! Try another email");
+      }
+      else{
+        //register and save new user record
+        registerNewUser();
+      }
+    }
+  }
+  catch(e){
+    
+  }
+}
+
+registerNewUser() async
+{
+  User userModel = User(
+    1,
+    usernameController.text.trim(),
+    firstnameController.text.trim(),
+    lastnameController.text.trim(),
+    icController.text.trim(),
+    phoneController.text.trim(),
+    emailController.text.trim(),
+    passwordController.text.trim(),
+
+  );
+
+  try{
+    
+     var res = await http.post(
+      Uri.parse(API.register),
+      body: userModel.toJson(),
+    );
+
+    if(res.statusCode == 200){
+
+      var resBodyRegister = jsonDecode(res.body);
+
+      if(resBodyRegister['success'] == true){
+        Fluttertoast.showToast(msg: "You have register successfully!");
+      }
+      else{
+         Fluttertoast.showToast(msg: "Error occured! Please try again.");
+      }
+    }
+
+  }
+  catch(e){
+    print(e.toString());
+    Fluttertoast.showToast(msg: e.toString());
+  }
+}
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,6 +107,7 @@ class SignupFormWidget extends StatelessWidget {
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
            TextFormField(
+            controller: usernameController,
              decoration: const InputDecoration(
                label: Text('Username'),
                border: OutlineInputBorder(),
@@ -34,6 +125,7 @@ class SignupFormWidget extends StatelessWidget {
            ),
            const SizedBox(height: tFormHeight-20),
             TextFormField(
+              controller: firstnameController,
              decoration: const InputDecoration(
                label: Text('First Name'),
                border: OutlineInputBorder(),
@@ -51,6 +143,7 @@ class SignupFormWidget extends StatelessWidget {
            ),
            const SizedBox(height: tFormHeight-20),
             TextFormField(
+              controller: lastnameController,
              decoration: const InputDecoration(
                label: Text('Last Name'),
                border: OutlineInputBorder(),
@@ -68,11 +161,12 @@ class SignupFormWidget extends StatelessWidget {
            ),
            const SizedBox(height: tFormHeight-20),
            TextFormField(
+            controller: icController,
              decoration: const InputDecoration(
-               label: Text('Gender'),
+               label: Text('Identification Number (IC)'),
                border: OutlineInputBorder(),
                prefixIcon: Icon(
-                 Icons.person_outline_rounded,
+                 Icons.card_giftcard_outlined,
                  color: Color(0xFF272727),
                ),
                labelStyle: TextStyle(
@@ -85,6 +179,7 @@ class SignupFormWidget extends StatelessWidget {
            ),
            const SizedBox(height: tFormHeight-20),
             TextFormField(
+              controller: phoneController,
              decoration: const InputDecoration(
                label: Text('Phone'),
                border: OutlineInputBorder(),
@@ -102,6 +197,7 @@ class SignupFormWidget extends StatelessWidget {
            ),
            const SizedBox(height: tFormHeight-20),
             TextFormField(
+              controller: emailController,
              decoration: const InputDecoration(
                label: Text('Email'),
                border: OutlineInputBorder(),
@@ -119,6 +215,7 @@ class SignupFormWidget extends StatelessWidget {
            ),
            const SizedBox(height: tFormHeight-20),
             TextFormField(
+              controller: passwordController,
              decoration: const InputDecoration(
                label: Text('Password'),
                border: OutlineInputBorder(),
@@ -138,7 +235,9 @@ class SignupFormWidget extends StatelessWidget {
             SizedBox(
                width: double.infinity,
                child: ElevatedButton(
-                 onPressed: () {},
+                 onPressed: () {
+                  validateUserEmail();
+                 },
                  style:OutlinedButton.styleFrom(
                    elevation: 0,
                    shape: RoundedRectangleBorder(
