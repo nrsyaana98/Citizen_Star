@@ -1,13 +1,65 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_interpolation_to_compose_strings, avoid_print
 
+import 'dart:convert';
+
+import 'package:citizen_star/api_connection/api_conn.dart';
 import 'package:citizen_star/constant/sizes.dart';
+import 'package:citizen_star/constant/user.dart';
+import 'package:citizen_star/controller/user_pref.dart';
 import 'package:citizen_star/screens/dashboard.dart';
 import 'package:citizen_star/widget/forgetpasswordsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  loginUser() async
+  {
+    var res = await http.post(
+      Uri.parse(API.login),
+      body: {
+        "email" : emailController.text.trim(),
+        "password" : passwordController.text.trim(),
+      },
+
+    );
+
+    if(res.statusCode == 200){
+
+       var resBodyLogin = jsonDecode(res.body);
+
+      if(resBodyLogin["success"] == true){
+        Fluttertoast.showToast(
+          msg: "You have login successfully!",);
+
+          User userInfo = User.fromJson(resBodyLogin['userData']);
+
+          await RememberUserPrefs.rememberUser(userInfo);
+
+          Future.delayed(Duration(milliseconds: 2000), ()
+          {
+            Get.to(Dashboard());
+          });
+      }
+      else{
+         Fluttertoast.showToast(msg: "Incorrect credentials! Please key in the correct email or password.");
+      }
+
+    }
+  
+}
 
   @override
   Widget build(BuildContext context){
@@ -51,6 +103,7 @@ class LoginScreen extends StatelessWidget {
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
                         TextFormField(
+                          controller: emailController,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.person_outline_outlined),
                             labelText: "Email",
@@ -60,6 +113,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: tFormHeight,),
                          TextFormField(
+                          controller: passwordController,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.fingerprint),
                             labelText: "Password",
@@ -84,7 +138,11 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: (() => Get.to(() => const Dashboard()) ) ,
+                            onPressed: () {
+                              // loginUser();
+
+                              (Get.to(Dashboard()));
+                            } ,
                             style:OutlinedButton.styleFrom(
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -110,7 +168,5 @@ class LoginScreen extends StatelessWidget {
     );
   
   }
-
- 
 }
 

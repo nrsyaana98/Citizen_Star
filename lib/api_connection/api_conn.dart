@@ -6,5 +6,5 @@ class API
   //user registration
   static const register = "$hostConnect/user/register.php";
   static const validateEmail = "$hostConnect/user/validate_email.php";
-
+  static const login = "$hostConnect/user/login.php";
 }

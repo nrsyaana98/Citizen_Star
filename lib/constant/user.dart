@@ -33,4 +33,14 @@ class User
     'password':password,
   };
 
+    factory User.fromJson(Map<String, dynamic> json) => User(
+    int.parse(json["email"]), 
+    json["username"], 
+    json["firstname"], 
+    json["lastname"], 
+    json["ic"], 
+    json["phone"], 
+    json["email"], 
+    json["password"]);
+
 }

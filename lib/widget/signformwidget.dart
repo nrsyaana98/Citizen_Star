@@ -5,9 +5,11 @@ import 'dart:convert';
 import 'package:citizen_star/api_connection/api_conn.dart';
 import 'package:citizen_star/constant/sizes.dart';
 import 'package:citizen_star/constant/user.dart';
+import 'package:citizen_star/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
 class SignupFormWidget extends StatefulWidget {
   const SignupFormWidget({
@@ -84,7 +86,23 @@ registerNewUser() async
       var resBodyRegister = jsonDecode(res.body);
 
       if(resBodyRegister['success'] == true){
-        Fluttertoast.showToast(msg: "You have register successfully!");
+        Fluttertoast.showToast(
+          msg: "You have register successfully!",);
+
+          setState(() {
+            usernameController.clear();
+            firstnameController.clear();
+            lastnameController.clear();
+            icController.clear();
+            phoneController.clear();
+            emailController.clear();
+            passwordController.clear();
+          });
+
+          Future.delayed(Duration(milliseconds: 2000), ()
+          {
+            Get.to(Dashboard());
+          });
       }
       else{
          Fluttertoast.showToast(msg: "Error occured! Please try again.");
