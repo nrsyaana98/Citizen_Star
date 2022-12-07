@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_typing_uninitialized_variables, empty_catches, unused_local_variable, avoid_print
 
 import 'dart:convert';
-
 import 'package:citizen_star/api_connection/api_conn.dart';
 import 'package:citizen_star/constant/sizes.dart';
 import 'package:citizen_star/constant/user.dart';
