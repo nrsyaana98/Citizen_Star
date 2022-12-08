@@ -1,6 +1,5 @@
-class API 
-{
-  static const hostConnect = "http://192.168.0.133/citizen_star";
+class API {
+  static const hostConnect = "http://192.168.1.19/citizen_star";
   static const hostConnectUser = "$hostConnect/user";
 
   //user registration
