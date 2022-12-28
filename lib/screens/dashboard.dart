@@ -10,8 +10,9 @@ class Dashboard extends StatelessWidget{
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: const Icon(
-            Icons.menu, color: Colors.black,
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {}, 
           ),
           title: Text(
             "Citizen Star",
